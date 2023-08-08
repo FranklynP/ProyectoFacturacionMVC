@@ -1,0 +1,142 @@
+﻿@using System.Globalization;
+@model ProyectoFacturacionMVC.Models.Factura
+
+@{
+    ViewData["Title"] = "Details";
+
+    decimal itbis = (Model.Itbis * 100);
+    string formattedTotal = String.Format("{0:C}", Model.Total);
+    string formattedSubTotal = String.Format("{0:C}", Model.Subtotal);
+
+}
+
+<div>
+    <h4>Detalles Factura</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.NumFactura)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.NumFactura)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Comprobante)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Comprobante)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ClienteName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ClienteName)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VendedorName)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VendedorName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.TipoFactura)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.TipoFactura)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Comentario)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Comentario)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.FechaCreacion)
+        </dt>
+        <dd class = "col-sm-10">
+            @Model.FechaCreacion.ToString("D", new CultureInfo("es-ES"));
+        </dd>
+        @*<dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Subtotal)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Subtotal)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Itbis)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Itbis)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Total)
+        </dd>*@
+    </dl>
+
+    <h5>Articulos</h5>
+    <hr />
+
+    <div class="col-md-8">
+        <div class="table-responsive" style="max-height: 350px;">
+            <table id="articulosTable" class="table table-nowrap table-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Descripcion</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unitario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.FacturaArticulos)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.ArticuloName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Cantidad)
+                            </td>
+                            <td class="text-end">
+                                @{
+                                    string precioFormatted = String.Format("{0:C}", item.PrecioUnitario);
+                                }
+                                @Html.Raw(precioFormatted)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot class="table-light">
+                    <tr>
+                        <th scope="row" colspan="2" class="border-0 text-end">Sub Total: </th>
+                        <td class="text-end">
+                            <span id="invoice_gnr_subtotal">
+                                @Html.Raw(formattedSubTotal)
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" colspan="2" class="border-0 text-end">ITBIS: </th>
+                        <td class="text-end">
+                            @Html.Raw(itbis)%
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row" colspan="2" class="border-0 text-end">TOTAL: </th>
+                        <td class="text-end">
+                            <span id="invoice_gnr_total">
+                                @Html.Raw(formattedTotal)
+                            </span>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Editar factura</a> |
+    <a asp-action="Index">Regresar al listado</a>
+</div>

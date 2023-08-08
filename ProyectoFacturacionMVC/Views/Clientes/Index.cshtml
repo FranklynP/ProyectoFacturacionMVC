@@ -1,0 +1,59 @@
+﻿@model IEnumerable<ProyectoFacturacionMVC.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4>Lista de Clientes</h4>
+
+<p>
+    <a asp-action="Create">Agregar Cliente</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rnc)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cedula)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CuentaContableId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rnc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cedula)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CuentaContableDesc)
+            </td>
+            <td>
+                <span>@item.Fecha.ToString("yyyy-MM-dd")</span>
+            </td>
+            <td>
+                <a asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">Editar</a> |
+                <a asp-action="Details" class="btn btn-primary" asp-route-id="@item.Id">Detalles</a> |
+                <a asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Eliminar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

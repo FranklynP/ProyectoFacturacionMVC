@@ -1,0 +1,64 @@
+﻿@model ProyectoFacturacionMVC.Models.Cliente
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h4>Editar Cliente</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Nombre" class="control-label"></label>
+                <input asp-for="Nombre" class="form-control solo-letras" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Apellido" class="control-label"></label>
+                <input asp-for="Apellido" class="form-control solo-letras" />
+                <span asp-validation-for="Apellido" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Rnc" class="control-label"></label>
+                <input asp-for="Rnc" class="form-control" />
+                <span asp-validation-for="Rnc" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                <label asp-for="Cedula" class="control-label"></label>
+                <input asp-for="Cedula" class="form-control cedula" />
+                <span asp-validation-for="Cedula" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group">
+                @*<label asp-for="CuentaContableId" class="control-label"></label>
+                <input asp-for="CuentaContableId" class="form-control" />
+                <span asp-validation-for="CuentaContableId" class="text-danger"></span>*@
+                <label for="CuentaContableId">Cuenta Contable</label>
+                @Html.DropDownListFor(model => model.CuentaContableId, (SelectList)ViewBag.cuentas_contables_list, "-- Seleccionar Cuenta --", new { @class = "form-control" })
+            </div>
+            <br />
+            @*<div class="form-group">
+                <label asp-for="Fecha" class="control-label"></label>
+                <input asp-for="Fecha" class="form-control" />
+                <span asp-validation-for="Fecha" class="text-danger"></span>
+            </div>*@
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Regresar al listado</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

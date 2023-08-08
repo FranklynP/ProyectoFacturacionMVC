@@ -1,0 +1,160 @@
+﻿@model ProyectoFacturacionMVC.Models.Factura
+
+@{
+    ViewData["Title"] = "Edit";
+
+    decimal itbis = (Model.Itbis * 100);
+    string formattedTotal = String.Format("{0:C}", Model.Total);
+    string formattedSubTotal = String.Format("{0:C}", Model.Subtotal);
+}
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+<h4>Editar Factura</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Edit">
+            <div class="row">
+                <div class="col-md-4">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <label asp-for="NumFactura" class="control-label"></label>
+                        <input asp-for="NumFactura" class="form-control" />
+                        <span asp-validation-for="NumFactura" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="Comprobante" class="control-label"></label>
+                        <input asp-for="Comprobante" class="form-control" />
+                        <span asp-validation-for="Comprobante" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label for="TipoFactura">Tipo de Factura</label>
+                        @Html.DropDownListFor(model => model.TipoFactura, (SelectList)ViewBag.tipos_factura_list, "-- Seleccionar un Tipo --", new { @class = "form-control" })
+                        <span asp-validation-for="TipoFactura" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label for="IdCliente">Cliente</label>
+                        @Html.DropDownListFor(model => model.IdCliente, (SelectList)ViewBag.clientes_list, "-- Seleccionar Cliente --", new { @class = "form-control" })
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label for="IdVendedor">Vendedor</label>
+                        @Html.DropDownListFor(model => model.IdVendedor, (SelectList)ViewBag.empleados_list, "-- Seleccionar Vendedor --", new { @class = "form-control" })
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="Comentario" class="control-label"></label>
+                        <textarea asp-for="Comentario" class="form-control"></textarea>
+                        <span asp-validation-for="Comentario" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <input type="submit" value="Update" class="btn btn-primary" />
+                    </div>
+                </div>
+                <br />
+                <div class="col-md-8">
+                    <div class="table-responsive" style="max-height: 350px;">
+                        <a href="#" id="agregarRowBtn" class="btn btn-sm btn-primary">Agregar</a>
+                        <table id="articulosTable" class="table table-nowrap">
+                            <thead>
+                                <tr>
+                                    <th>Articulo</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unitario</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var articuloFactura in Model.FacturaArticulos.Select((value, i) => new {i, value}))
+                                {
+                                    int idArticulo = articuloFactura.value.IdArticulo;
+                                    <tr>
+                                        <td>
+                                            <select name="FacturaArticulos[@articuloFactura.i].IdArticulo" class="articulo form-control valid" aria-invalid="false">
+                                                <option value="">Seleccione un artículo</option>
+                                                @foreach (var articulosGnr in ViewBag.articulos_list)
+                                                {
+                                                    @if (articulosGnr.Id == @articuloFactura.value.IdArticulo)
+                                                    {
+
+                                                        <option value="@articulosGnr.Id" data-precio="@articulosGnr.Precio" selected>
+                                                            @articulosGnr.Descripcion
+                                                        </option>
+                                                    } else {
+                                                        <option value="@articulosGnr.Id" data-precio="@articulosGnr.Precio">
+                                                            @articulosGnr.Descripcion
+                                                        </option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="text" name="FacturaArticulos[@articuloFactura.i].Cantidad" class="cantidad form-control" value="@articuloFactura.value.Cantidad">
+                                        </td>
+                                        <td>
+                                            <input type="text" name="FacturaArticulos[@articuloFactura.i].PrecioUnitario" class="precio form-control-plaintext valid" value="@articuloFactura.value.PrecioUnitario" readonly aria-invalid="false">
+                                        </td>
+                                        <td>
+                                            <span class="row_total">
+                                                @Html.Raw(articuloFactura.value.PrecioUnitario * articuloFactura.value.Cantidad)
+                                            </span>
+                                        </td>
+                                        <td><button type="button" class="eliminarBtn">Eliminar</button></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-nowrap invoice_total_details">
+                            <thead style="border-style: hidden;">
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr id="factura-subtotal">
+                                    <th scope="row" colspan="3" class="border-0 text-end">Sub Total: </th>
+                                    <td class="text-end">
+                                        <span id="invoice_gnr_subtotal">@Html.Raw(formattedSubTotal)</span>
+                                        <input asp-for="Subtotal" class="form-control-plaintext" type="hidden" readonly />
+                                        <span asp-validation-for="Subtotal" class="text-danger"></span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row" colspan="3" class="border-0 text-end">ITBIS: </th>
+                                    <td class="text-end">@Html.Raw(itbis)%</td>
+                                </tr>
+                                <tr id="factura-total">
+                                    <th scope="row" colspan="3" class="border-0 text-end">TOTAL: </th>
+                                    <td class="text-end">
+                                        <span id="invoice_gnr_total">@Html.Raw(formattedTotal)</span>
+                                        <input asp-for="Total" class="form-control-plaintext" type="hidden" readonly />
+                                        <span asp-validation-for="Total" class="text-danger"></span>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,110 @@
+﻿@model IEnumerable<ProyectoFacturacionMVC.Models.AsientoContable>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h4>Lista de Asientos Contables</h4>
+
+<hr />
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+
+<div class="col-md-12">
+    <form asp-controller="AsientoContables" asp-action="Index" method="get" style="margin-bottom: 10px;">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label style="margin-right: 5px;">Fecha Desde:</label>
+                        <input type="date" name="fechaDesde" class="form-control" style="width: 300px; height: 34px;" />
+                    </div>
+                    <div class="col-md-4">
+                        <label style="margin-right: 5px;">Fecha Hasta:</label>
+                        <input type="date" name="fechaHasta" class="form-control" style="width: 300px; height: 34px;" />
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-secondary" style="display: inline-flex; align-items: center; margin-left: 5px; margin-top: 25px;">
+                            Buscar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<br />
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CuentaDb)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CuentaCr)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Monto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaCreacion)
+            </th>
+            @*<th>
+                @Html.DisplayNameFor(model => model.IdFactura)
+            </th>*@
+            <th>Accion</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CuentaDbDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CuentaCrDesc)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monto)
+            </td>
+            <td>
+                @if (Convert.ToBoolean(item.Estado))
+                {
+                    <span class="badge bg-success">Enviado</span>
+                } else {
+                    <span class="badge bg-warning">Pendiente</span>
+                }
+            </td>
+            <td>
+                <span>@item.FechaCreacion.ToString("yyyy-MM-dd")</span>
+            </td>
+            @*<td>
+                @Html.DisplayFor(modelItem => item.IdFactura)
+            </td>*@
+            <td>
+                @if (! Convert.ToBoolean(item.Estado) )
+                {
+                    <a asp-action="Contabilizar" asp-route-id="@item.Id" class="btn btn-warning">Contabilizar</a>
+                } else {
+                    <span class="badge bg-info">Ya registraste este asiento</span>
+                }
+            </td>
+            @*<td>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-primary">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+            </td>*@
+        </tr>
+}
+    </tbody>
+</table>
